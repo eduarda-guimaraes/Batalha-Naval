@@ -99,4 +99,4 @@ J  . . . . . . . . . .
 ---
 
 ## ✨ Autor
-Desenvolvido por [Amanda e Eduarda] 👨‍💻👩‍💻
+Desenvolvido por Amanda e Eduarda 👨‍💻👩‍💻
