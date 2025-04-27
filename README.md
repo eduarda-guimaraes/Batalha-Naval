@@ -91,7 +91,5 @@ Parabéns, [Nome do Vencedor]! Você afundou todos os navios do oponente! 🏆
 
 ### Amanda de Mello Ferreira  
 🔗 [GitHub](https://github.com/amandamferreira)
-
----
 ### Eduarda Guimarães  
 🔗 [GitHub](https://github.com/eduarda-guimaraes)
