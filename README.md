@@ -1,102 +1,92 @@
-# 🚢 Batalha Naval em Java 🚢
+# 🚢 Batalha Naval em Java
 
 ## 📖 Descrição
-Projeto de implementação do clássico jogo **Batalha Naval** em **Java**.  
-Permite partidas entre **dois jogadores** ou **jogador vs computador**, com alocação manual ou automática dos navios em um **tabuleiro 10x10**.
+Projeto de implementação do clássico jogo **Batalha Naval**, desenvolvido em **Java**.  
+O jogo permite partidas entre **dois jogadores** ou **jogador contra computador**, com opção de alocação automática ou manual dos navios em um tabuleiro 10x10.
 
 ---
 
-## 🎯 Funcionalidades
-- 🔹 **Mapa** (matriz) de **10x10** para cada jogador.
-- 🚢 **Alocação de Barcos**:
-  - 1 navio de **4 espaços**
-  - 2 navios de **3 espaços**
-  - 3 navios de **2 espaços**
-  - 4 navios de **1 espaço**
-- 🧑‍🤝‍🧑 **Modo de jogo**: Jogador vs Jogador ou Jogador vs Computador.
-- 🎲 **Alocação**:
-  - Manual (escolha posição e direção)
-  - Automática (sorteio de posições)
-- ✅ **Validação** das posições (não sair do mapa e não sobrepor barcos).
-- 🎯 **Sistema de ataque**:
-  - Água 🌊: marca o acerto e passa a vez.
-  - Barco 🚢: marca o acerto e continua jogando.
-  - Ponto já atacado 🔄: deve repetir a jogada.
-- 🤖 Computador atira aleatoriamente se for oponente.
-- 🏆 O jogo termina quando todos os navios de um jogador forem afundados.
-- 🔒 O mapa do oponente só mostra os tiros, sem revelar os navios.
+## ⚙️ Funcionalidades
+- 🗺️ Tabuleiro de 10x10 para cada jogador.
+- 🚤 Alocação dos navios:
+  - 1 navio de 4 espaços
+  - 2 navios de 3 espaços
+  - 3 navios de 2 espaços
+  - 4 navios de 1 espaço
+- 🆚 Escolha entre modo Jogador vs Jogador ou Jogador vs Computador.
+- 🛠️ Alocação manual (posição e direção) ou automática (aleatória).
+- ✅ Validação de posição para impedir sobreposição e extrapolação do tabuleiro.
+- 🎯 Sistema de ataque:
+  - Acerto na água: marca o mapa e passa a vez.
+  - Acerto em navio: marca o mapa e o jogador continua jogando.
+  - Ataque em posição já atingida: o jogador precisa jogar novamente.
+- 🤖 Computador realiza ataques aleatórios.
+- 🏆 O jogo termina quando todos os navios de um jogador forem destruídos.
 
 ---
 
-## 🕹️ Como Jogar
-1. Escolha o **modo de jogo**: Jogador vs Jogador 🧑‍🤝‍🧑 ou Jogador vs Computador 🤖.
-2. Insira o **nome dos jogadores** 🧑👩.
-3. Faça a **alocação dos navios**:
-   - ✋ Manualmente: escolhendo linha, coluna e direção (horizontal ➡️ ou vertical ⬇️).
-   - 🎲 Automaticamente: o jogo posiciona os navios.
-4. 🏹 Ataque:
-   - Se acertar água 🌊, passa a vez.
-   - Se acertar um navio 🚢, continua jogando.
-   - Se tentar atirar num lugar já atacado 🔄, repete a jogada.
-5. 🏆 Vence quem destruir todos os navios do adversário!
+## 🎮 Como Jogar
+1. Escolha o modo de jogo (contra outro jogador ou contra o computador).
+2. Informe o nome dos jogadores.
+3. Escolha a forma de alocação dos navios:
+   - Manual: definindo posição e direção (horizontal ➡️ ou vertical ⬇️).
+   - Automática: o sistema aloca os navios de forma aleatória.
+4. Durante o turno:
+   - Escolha uma linha e coluna para atacar o oponente.
+   - O sistema informa se o ataque foi na água ou em um navio.
+5. O primeiro jogador a destruir todos os navios do adversário vence.
 
 ---
 
-## ⚓ Regras de Alocação
-- 🚫 Barcos **não podem sair dos limites** do tabuleiro.
-- 🚫 Barcos **não podem se sobrepor**.
-- ↔️ Barcos podem ser posicionados **horizontalmente** ou **verticalmente**.
-- 📏 Sempre validar antes de confirmar a posição!
+## 🗺️ Representação do Mapa
+- `X` : Barco atingido
+- `O` : Água atingida
+- `*` : Área ainda não atingida e sem informações reveladas
 
 ---
 
-## 🗺️ Representação no Mapa
-- 🌊 **Água atingida:** (exemplo: `*`)
-- 🎯 **Navio atingido:** (exemplo: `X`)
-- ❓ **Água e navios intactos:** não são revelados ao adversário.
+## 🖼️ Prints de Tela
 
----
-
-## ⚙️ Requisitos Técnicos
-- 💻 **Linguagem:** Java
-- 🛠️ **IDE recomendada:** IntelliJ IDEA, Eclipse ou VS Code com extensão Java
-- ☕ **Versão Java:** 8 ou superior
-
----
-
-## 🗂️ Estrutura Básica
-- `Mapa.java` - Gerencia o tabuleiro e posições.
-- `Navio.java` - Representa um navio (tamanho e posição).
-- `Jogador.java` - Representa cada jogador.
-- `Computador.java` - Controla a lógica do oponente automático.
-- `BatalhaNaval.java` - Classe principal (fluxo do jogo).
-
----
-
-## 📋 Exemplo de Mapa
+### Tela inicial de escolha de modo de jogo
 ```
-   0 1 2 3 4 5 6 7 8 9
-A  . . . . . . . . . .
-B  . . . . . . . . . .
-C  . . . B B B . . . .
-D  . . . . . . . . . .
-E  . . . . . . . . . .
-F  . . . . . . . . . .
-G  . . . . . . . . . .
-H  . . . . . . . . . .
-I  . . . . . . . . . .
-J  . . . . . . . . . .
+Bem-vindo à Batalha Naval!
+Escolha o modo de jogo:
+1 - Jogador vs Jogador
+2 - Jogador vs Computador
 ```
-(Legenda: `.` = vazio, `B` = barco)
+
+### Exemplo de Mapa Durante o Jogo
+```
+  0 1 2 3 4 5 6 7 8 9
+A * * * * * * * * * *
+B * * * O * * * * * *
+C * * X X * * * * * *
+D * * * * * * * * * *
+E * * * * * * * * * *
+F * * * * * * * * * *
+G * * * * * * * * * *
+H * * * * * * * * * *
+I * * * * * * * * * *
+J * * * * * * * * * *
+```
+
+- `X`: Barco atingido  
+- `O`: Água atingida  
+- `*`: Área ainda não atingida e sem informações reveladas
+
+### Tela de vitória
+```
+Parabéns, [Nome do Vencedor]! Você afundou todos os navios do oponente! 🏆
+```
 
 ---
 
-## 🚀 Melhorias Futuras
-- 🖥️ Interface gráfica (GUI) com Java Swing ou JavaFX.
-- 🧠 Inteligência artificial com diferentes níveis de dificuldade.
-- 🏅 Sistema de ranking e estatísticas.
+## 📋 Requisitos
+- ☕ Java 8 ou superior
+- 💻 IDE para desenvolvimento Java (como IntelliJ IDEA, Eclipse ou VS Code)
 
 ---
 
-## ✨ Autor
-Desenvolvido por Amanda e Eduarda 👨‍💻👩‍💻
+## 👥 Desenvolvedores
+- [Amanda de Mello Ferreira]
+- [Eduarda Guimarães]
