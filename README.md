@@ -87,6 +87,13 @@ Parabéns, [Nome do Vencedor]! Você afundou todos os navios do oponente! 🏆
 
 ---
 
-## 👥 Desenvolvedores
-- [Amanda de Mello Ferreira]
-- [Eduarda Guimarães]
+## 👥 Desenvolvedoras
+
+---
+
+### Amanda de Mello Ferreira  
+🔗 [GitHub](https://github.com/amandamferreira)
+
+---
+### Eduarda Guimarães  
+🔗 [GitHub](https://github.com/eduarda-guimaraes)
