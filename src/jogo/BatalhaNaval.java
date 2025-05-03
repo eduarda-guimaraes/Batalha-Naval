@@ -11,9 +11,9 @@ public class BatalhaNaval {
         // Cria os tabuleiros para os jogadores (10x10)
         int[][] tabuleiroJogador1 = new int[10][10];
         int[][] tabuleiroJogador2 = new int[10][10];
-        // Tabuleiros que mostram apenas os tiros
         int[][] visaoJogador1 = new int[10][10];
         int[][] visaoJogador2 = new int[10][10];
+
         // Tamanhos dos navios
         int[] tamanhosNavios = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
 
@@ -26,7 +26,7 @@ public class BatalhaNaval {
         System.out.println("2 - Jogador vs Jogador");
         System.out.print("Digite 1 ou 2: ");
         int modo = ler.nextInt();
-        ler.nextLine(); // Limpar o buffer
+        ler.nextLine();
 
         // Nomes dos jogadores
         System.out.print("Nome do Jogador 1: ");
@@ -40,11 +40,10 @@ public class BatalhaNaval {
             jogador2 = ler.nextLine();
         }
 
-        // Posicionar navios do jogador 1
+        // Posicionamento dos navios
         System.out.println("\n" + jogador1 + ", posicione seus navios:");
         posicionarNavios(ler, tabuleiroJogador1, tamanhosNavios);
 
-        // Posicionar navios do jogador 2 ou computador
         if (modo == 1) {
             posicionarNaviosComputador(tabuleiroJogador2, tamanhosNavios);
             System.out.println("\nComputador posicionou seus navios.");
@@ -60,7 +59,7 @@ public class BatalhaNaval {
         while (!jogoAcabou) {
             if (vezJogador1) {
                 System.out.println("Tabuleiro do oponente:");
-                imprimirTabuleiro(visaoJogador2, false, true);
+                imprimirTabuleiro(visaoJogador2, false);
 
                 boolean acertou = realizarAtaque(ler, tabuleiroJogador2, visaoJogador2);
 
@@ -71,9 +70,9 @@ public class BatalhaNaval {
                     vezJogador1 = false;
                 }
             } else {
-                System.out.println("\n Vez de " + jogador2);
+                System.out.println("\nVez de " + jogador2);
                 System.out.println("Tabuleiro do oponente:");
-                imprimirTabuleiro(visaoJogador1, false, true);
+                imprimirTabuleiro(visaoJogador1, false);
 
                 boolean acertou;
                 if (modo == 1) {
@@ -102,10 +101,8 @@ public class BatalhaNaval {
     }
 
     public static void posicionarNavios(Scanner ler, int[][] tabuleiro, int[] tamanhosNavios) {
-        for (int i = 0; i < tamanhosNavios.length; i++) {
-            int tamanho = tamanhosNavios[i];
-
-            imprimirTabuleiro(tabuleiro, true, false);
+        for (int tamanho : tamanhosNavios) {
+            imprimirTabuleiro(tabuleiro, true);
             System.out.println("Posicionando navio de tamanho " + tamanho);
 
             boolean posicionado = false;
@@ -167,27 +164,17 @@ public class BatalhaNaval {
     }
 
     public static boolean verificarPosicao(int[][] tabuleiro, int linha, int coluna, int tamanho, int direcao) {
-        if (linha < 0 || linha > 9 || coluna < 0 || coluna > 9) {
-            return false;
-        }
+        if (linha < 0 || linha > 9 || coluna < 0 || coluna > 9) return false;
 
         if (direcao == 1) {
-            if (coluna + tamanho > 10) {
-                return false;
-            }
+            if (coluna + tamanho > 10) return false;
             for (int c = coluna; c < coluna + tamanho; c++) {
-                if (tabuleiro[linha][c] != 0) {
-                    return false;
-                }
+                if (tabuleiro[linha][c] != 0) return false;
             }
         } else {
-            if (linha + tamanho > 10) {
-                return false;
-            }
+            if (linha + tamanho > 10) return false;
             for (int l = linha; l < linha + tamanho; l++) {
-                if (tabuleiro[l][coluna] != 0) {
-                    return false;
-                }
+                if (tabuleiro[l][coluna] != 0) return false;
             }
         }
         return true;
@@ -204,7 +191,7 @@ public class BatalhaNaval {
             ler.nextLine();
 
             if (linha < 0 || linha > 9 || coluna < 0 || coluna > 9) {
-                System.out.println("Posição inválida! Digite valores entre 0 e 9.");
+                System.out.println("Posição inválida!");
                 continue;
             }
 
@@ -263,19 +250,15 @@ public class BatalhaNaval {
         return true;
     }
 
-    public static void imprimirTabuleiro(int[][] tabuleiro, boolean mostrarNavios, boolean mostrarLegenda) {
-        if (mostrarLegenda) {
-            mostrarLegenda();
-        }
-
+    public static void imprimirTabuleiro(int[][] tabuleiro, boolean mostrarNavios) {
         System.out.print("   ");
-        for (char c = 'A'; c <= 'J'; c++) {
-            System.out.print(c + " ");
+        for (int j = 0; j < 10; j++) {
+            System.out.print(j + " ");
         }
         System.out.println();
 
         for (int i = 0; i < 10; i++) {
-            System.out.print(i + "  ");
+            System.out.printf("%2d ", i);
             for (int j = 0; j < 10; j++) {
                 char simbolo;
                 if (mostrarNavios) {
