@@ -8,19 +8,16 @@ public class BatalhaNaval {
         Scanner ler = new Scanner(System.in);
         Random aleatorio = new Random();
 
-        // Cria os tabuleiros para os jogadores (10x10)
         int[][] tabuleiroJogador1 = new int[10][10];
         int[][] tabuleiroJogador2 = new int[10][10];
         int[][] visaoJogador1 = new int[10][10];
         int[][] visaoJogador2 = new int[10][10];
 
-        // Tamanhos dos navios
         int[] tamanhosNavios = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
 
         System.out.println("BATALHA NAVAL");
         mostrarLegenda();
 
-        // Configuração do modo de jogo
         System.out.println("Escolha o modo de jogo:");
         System.out.println("1 - Jogador vs Computador");
         System.out.println("2 - Jogador vs Jogador");
@@ -28,7 +25,6 @@ public class BatalhaNaval {
         int modo = ler.nextInt();
         ler.nextLine();
 
-        // Nomes dos jogadores
         System.out.print("Nome do Jogador 1: ");
         String jogador1 = ler.nextLine();
         String jogador2;
@@ -40,25 +36,43 @@ public class BatalhaNaval {
             jogador2 = ler.nextLine();
         }
 
-        // Posicionamento dos navios
-        System.out.println("\n" + jogador1 + ", posicione seus navios:");
-        posicionarNavios(ler, tabuleiroJogador1, tamanhosNavios);
+        System.out.println("\n" + jogador1 + ", deseja posicionar seus navios manualmente?");
+        System.out.print("Digite S para sim ou N para não (posicionamento automático): ");
+        char resposta1 = ler.next().toUpperCase().charAt(0);
+        ler.nextLine();
+
+        if (resposta1 == 'S') {
+            System.out.println(jogador1 + ", posicione seus navios:");
+            posicionarNavios(ler, tabuleiroJogador1, tamanhosNavios);
+        } else {
+            posicionarNaviosComputador(tabuleiroJogador1, tamanhosNavios);
+            System.out.println("Navios posicionados automaticamente para " + jogador1 + ".");
+        }
 
         if (modo == 1) {
             posicionarNaviosComputador(tabuleiroJogador2, tamanhosNavios);
             System.out.println("\nComputador posicionou seus navios.");
         } else {
-            System.out.println("\n" + jogador2 + ", posicione seus navios:");
-            posicionarNavios(ler, tabuleiroJogador2, tamanhosNavios);
+            System.out.println("\n" + jogador2 + ", deseja posicionar seus navios manualmente?");
+            System.out.print("Digite S para sim ou N para não (posicionamento automático): ");
+            char resposta2 = ler.next().toUpperCase().charAt(0);
+            ler.nextLine();
+
+            if (resposta2 == 'S') {
+                System.out.println(jogador2 + ", posicione seus navios:");
+                posicionarNavios(ler, tabuleiroJogador2, tamanhosNavios);
+            } else {
+                posicionarNaviosComputador(tabuleiroJogador2, tamanhosNavios);
+                System.out.println("Navios posicionados automaticamente para " + jogador2 + ".");
+            }
         }
 
-        // Jogo principal
         boolean vezJogador1 = true;
         boolean jogoAcabou = false;
 
         while (!jogoAcabou) {
             if (vezJogador1) {
-                System.out.println("Tabuleiro do oponente:");
+                System.out.println("\nTabuleiro do oponente:");
                 imprimirTabuleiro(visaoJogador2, false);
 
                 boolean acertou = realizarAtaque(ler, tabuleiroJogador2, visaoJogador2);
@@ -93,8 +107,8 @@ public class BatalhaNaval {
 
     public static void mostrarLegenda() {
         System.out.println("\nLEGENDA:");
-        System.out.println("~ - Água");
-        System.out.println("N - Navio (apenas durante o posicionamento)");
+        System.out.println("* - Água");
+        System.out.println("N - Navio (durante o posicionamento)");
         System.out.println("O - Tiro na água");
         System.out.println("X - Tiro no navio (acerto)");
         System.out.println("----------------------");
@@ -107,10 +121,12 @@ public class BatalhaNaval {
 
             boolean posicionado = false;
             while (!posicionado) {
-                System.out.print("Digite a linha (0-9): ");
+                System.out.print("Linha (0-9): ");
                 int linha = ler.nextInt();
-                System.out.print("Digite a coluna (0-9): ");
-                int coluna = ler.nextInt();
+                System.out.print("Coluna (A-J): ");
+                char colLetra = ler.next().toUpperCase().charAt(0);
+                int coluna = colLetra - 'A';
+
                 System.out.print("Direção (1-Horizontal, 2-Vertical): ");
                 int direcao = ler.nextInt();
                 ler.nextLine();
@@ -184,10 +200,11 @@ public class BatalhaNaval {
         int linha, coluna;
 
         while (true) {
-            System.out.print("Digite a linha para atacar (0-9): ");
+            System.out.print("Linha (0-9): ");
             linha = ler.nextInt();
-            System.out.print("Digite a coluna para atacar (0-9): ");
-            coluna = ler.nextInt();
+            System.out.print("Coluna (A-J): ");
+            char colLetra = ler.next().toUpperCase().charAt(0);
+            coluna = colLetra - 'A';
             ler.nextLine();
 
             if (linha < 0 || linha > 9 || coluna < 0 || coluna > 9) {
@@ -204,38 +221,71 @@ public class BatalhaNaval {
 
         if (tabuleiro[linha][coluna] == 1) {
             System.out.println("ACERTOU UM NAVIO!");
-            tabuleiro[linha][coluna] = 3;
-            visao[linha][coluna] = 3;
+            tabuleiro[linha][coluna] = 3;  // Marca o acerto
+            visao[linha][coluna] = 3;      // Atualiza a visão do jogador
+
+            // Mostrar o navio completo após o acerto
+            mostrarNavioCompleto(tabuleiro, linha, coluna);
+
             return true;
         } else {
             System.out.println("ÁGUA!");
-            tabuleiro[linha][coluna] = 2;
-            visao[linha][coluna] = 2;
+            tabuleiro[linha][coluna] = 2;  // Marca como água
+            visao[linha][coluna] = 2;      // Atualiza a visão do jogador
             return false;
         }
     }
 
-    public static boolean realizarAtaqueComputador(int[][] tabuleiro, int[][] visao) {
-        Random aleatorio = new Random();
-        int linha, coluna;
+    // Método para mostrar o navio completo
+    public static void mostrarNavioCompleto(int[][] tabuleiro, int linha, int coluna) {
+        // Vamos mostrar o navio completo em qualquer direção após o acerto
+        // Verificar horizontal
+        for (int i = 0; i < 10; i++) {
+            if (tabuleiro[linha][i] == 1) {
+                tabuleiro[linha][i] = 3;  // Marca a parte do navio
+            }
+        }
 
-        do {
-            linha = aleatorio.nextInt(10);
-            coluna = aleatorio.nextInt(10);
-        } while (visao[linha][coluna] == 2 || visao[linha][coluna] == 3);
+        // Verificar vertical
+        for (int i = 0; i < 10; i++) {
+            if (tabuleiro[i][coluna] == 1) {
+                tabuleiro[i][coluna] = 3;  // Marca a parte do navio
+            }
+        }
+    }
 
-        System.out.println("Computador atacou na posição " + linha + "," + coluna);
+    public static void imprimirTabuleiro(int[][] tabuleiro, boolean mostrarNavios) {
+        System.out.print("   ");
+        for (char letra = 'A'; letra <= 'J'; letra++) {
+            System.out.printf("%-3s", letra);
+        }
+        System.out.println();
 
-        if (tabuleiro[linha][coluna] == 1) {
-            System.out.println("O computador ACERTOU um navio!");
-            tabuleiro[linha][coluna] = 3;
-            visao[linha][coluna] = 3;
-            return true;
-        } else {
-            System.out.println("O computador atirou na ÁGUA!");
-            tabuleiro[linha][coluna] = 2;
-            visao[linha][coluna] = 2;
-            return false;
+        for (int i = 0; i < 10; i++) {
+            System.out.printf("%-3d", i);
+            for (int j = 0; j < 10; j++) {
+                char simbolo;
+
+                if (mostrarNavios) {
+                    // Mostrar o navio completo se for um navio
+                    if (tabuleiro[i][j] == 1) {
+                        simbolo = 'N'; // Navio
+                    } else {
+                        simbolo = '*'; // Água
+                    }
+                } else {
+                    if (tabuleiro[i][j] == 3) {
+                        simbolo = 'X'; // Acerto no navio
+                    } else if (tabuleiro[i][j] == 2) {
+                        simbolo = 'O'; // Água
+                    } else {
+                        simbolo = '*'; // Oculto
+                    }
+                }
+
+                System.out.printf("%-3s", simbolo);
+            }
+            System.out.println();
         }
     }
 
@@ -243,38 +293,36 @@ public class BatalhaNaval {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (tabuleiro[i][j] == 1) {
-                    return false;
+                    return false;  // Se encontrar um navio ainda não afundado
                 }
             }
         }
-        return true;
+        return true;  // Todos os navios foram afundados
     }
 
-    public static void imprimirTabuleiro(int[][] tabuleiro, boolean mostrarNavios) {
-        System.out.print("   ");
-        for (int j = 0; j < 10; j++) {
-            System.out.print(j + " ");
-        }
-        System.out.println();
+    public static boolean realizarAtaqueComputador(int[][] tabuleiro, int[][] visao) {
+        Random aleatorio = new Random();
+        int linha = aleatorio.nextInt(10);
+        int coluna = aleatorio.nextInt(10);
 
-        for (int i = 0; i < 10; i++) {
-            System.out.printf("%2d ", i);
-            for (int j = 0; j < 10; j++) {
-                char simbolo;
-                if (mostrarNavios) {
-                    simbolo = (tabuleiro[i][j] == 1) ? 'N' : '~';
-                } else {
-                    if (tabuleiro[i][j] == 2) {
-                        simbolo = 'O';
-                    } else if (tabuleiro[i][j] == 3) {
-                        simbolo = 'X';
-                    } else {
-                        simbolo = '~';
-                    }
-                }
-                System.out.print(simbolo + " ");
-            }
-            System.out.println();
+        while (visao[linha][coluna] == 2 || visao[linha][coluna] == 3) {
+            linha = aleatorio.nextInt(10);
+            coluna = aleatorio.nextInt(10);
+        }
+
+        System.out.println("Computador atirou em: " + linha + ", " + (char) ('A' + coluna));
+
+        if (tabuleiro[linha][coluna] == 1) {
+            System.out.println("ACERTOU UM NAVIO!");
+            tabuleiro[linha][coluna] = 3;
+            visao[linha][coluna] = 3;
+            mostrarNavioCompleto(tabuleiro, linha, coluna);
+            return true;
+        } else {
+            System.out.println("ÁGUA!");
+            tabuleiro[linha][coluna] = 2;
+            visao[linha][coluna] = 2;
+            return false;
         }
     }
 }
