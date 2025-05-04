@@ -86,7 +86,7 @@ public class BatalhaNaval {
                 boolean acertou = realizarAtaque(ler, tabuleiroJogador2, visaoJogador2);  // Jogador 1 atira no tabuleiro do jogador 2
 
                 if (todosNaviosAfundados(tabuleiroJogador2)) {  // Verifica se todos os navios de jogador 2 foram afundados
-                    System.out.println("\nPARABÉNS " + jogador1 + "! VOCÊ VENCEU!");
+                    System.out.println("\nPARABÉNS " + jogador1 + "! VOCÊ VENCEU! 🏆");
                     jogoAcabou = true;
                 } else if (!acertou) {
                     vezJogador1 = false;  // Se não acertou, muda para a vez do jogador 2
@@ -104,7 +104,7 @@ public class BatalhaNaval {
                 }
 
                 if (todosNaviosAfundados(tabuleiroJogador1)) {
-                    System.out.println("\nPARABÉNS " + jogador2 + "! VOCÊ VENCEU!");
+                    System.out.println("\nPARABÉNS " + jogador2 + "! VOCÊ VENCEU! 🏆");
                     jogoAcabou = true;
                 } else if (!acertou) {
                     vezJogador1 = true;  // Se não acertou, muda para a vez do jogador 1
@@ -192,151 +192,100 @@ public class BatalhaNaval {
         }
     }
 
-    // Verifica se é possível posicionar o navio na posição escolhida
+    // Função para verificar a posição antes de posicionar o navio
     public static boolean verificarPosicao(int[][] tabuleiro, int linha, int coluna, int tamanho, int direcao) {
-        if (linha < 0 || linha > 9 || coluna < 0 || coluna > 9) return false;
-
-        if (direcao == 1) {
+        if (direcao == 1) {  // Horizontal
             if (coluna + tamanho > 10) return false;
             for (int c = coluna; c < coluna + tamanho; c++) {
-                if (tabuleiro[linha][c] != 0) return false;
+                if (tabuleiro[linha][c] == 1) return false;
             }
-        } else {
+        } else {  // Vertical
             if (linha + tamanho > 10) return false;
             for (int l = linha; l < linha + tamanho; l++) {
-                if (tabuleiro[l][coluna] != 0) return false;
+                if (tabuleiro[l][coluna] == 1) return false;
             }
         }
         return true;
     }
 
-    // Função para realizar um ataque
-    public static boolean realizarAtaque(Scanner ler, int[][] tabuleiro, int[][] visao) {
-        int linha, coluna;
-
-        while (true) {
-            System.out.print("Linha (0-9): ");
-            linha = ler.nextInt();
-            System.out.print("Coluna (A-J): ");
-            char colLetra = ler.next().toUpperCase().charAt(0);
-            coluna = colLetra - 'A';
-            ler.nextLine();  // Limpa o buffer
-
-            // Verifica se a posição é válida e se não foi atacada antes
-            if (linha < 0 || linha > 9 || coluna < 0 || coluna > 9) {
-                System.out.println("Posição inválida!");
-                continue;
-            }
-
-            if (visao[linha][coluna] == 2 || visao[linha][coluna] == 3) {
-                System.out.println("Você já atirou aqui! Escolha outra posição.");
-            } else {
-                break;
-            }
-        }
-
-        // Se acertar um navio
-        if (tabuleiro[linha][coluna] == 1) {
-            System.out.println("ACERTOU UM NAVIO!");
-            tabuleiro[linha][coluna] = 3;  // Marca o acerto
-            visao[linha][coluna] = 3;      // Atualiza a visão do jogador
-
-            // Mostrar o navio completo após o acerto
-            mostrarNavioCompleto(tabuleiro, linha, coluna);
-
-            return true;
-        } else {
-            System.out.println("ÁGUA!");
-            tabuleiro[linha][coluna] = 2;  // Marca como água
-            visao[linha][coluna] = 2;      // Atualiza a visão do jogador
-            return false;
-        }
-    }
-
-    // Método para mostrar o navio completo (horizontal e vertical) após o acerto
-    public static void mostrarNavioCompleto(int[][] tabuleiro, int linha, int coluna) {
-        // Verificar horizontalmente
-        for (int i = 0; i < 10; i++) {
-            if (tabuleiro[linha][i] == 1) {
-                tabuleiro[linha][i] = 3;  // Marca como parte do navio
-            }
-        }
-
-        // Verificar verticalmente
-        for (int i = 0; i < 10; i++) {
-            if (tabuleiro[i][coluna] == 1) {
-                tabuleiro[i][coluna] = 3;  // Marca como parte do navio
-            }
-        }
-    }
-
-    // Função para imprimir o tabuleiro
+    // Função para imprimir o tabuleiro com alinhamento
     public static void imprimirTabuleiro(int[][] tabuleiro, boolean mostrarNavios) {
+        // Cabeçalho das colunas (A a J)
         System.out.print("   ");
-        for (char letra = 'A'; letra <= 'J'; letra++) {
-            System.out.printf("%-3s", letra);
+        for (char coluna = 'A'; coluna <= 'J'; coluna++) {
+            System.out.printf("%-3s", coluna);
         }
         System.out.println();
 
+        // Impressão das linhas do tabuleiro
         for (int i = 0; i < 10; i++) {
-            System.out.printf("%-3d", i);
+            System.out.printf("%-3d", i); // número da linha
             for (int j = 0; j < 10; j++) {
-                char simbolo;
-
-                if (mostrarNavios) {
-                    if (tabuleiro[i][j] == 1) {
-                        simbolo = 'N'; // Navio
-                    } else {
-                        simbolo = '*'; // Água
-                    }
+                String simbolo;
+                if (tabuleiro[i][j] == 1 && !mostrarNavios) {
+                    simbolo = "*"; // área oculta com navio
+                } else if (tabuleiro[i][j] == 0) {
+                    simbolo = "O"; // água
+                } else if (tabuleiro[i][j] == -1) {
+                    simbolo = "X"; // tiro que acertou
                 } else {
-                    if (tabuleiro[i][j] == 3) {
-                        simbolo = 'X'; // Acerto
-                    } else if (tabuleiro[i][j] == 2) {
-                        simbolo = 'O'; // Água
-                    } else {
-                        simbolo = '*'; // Água
-                    }
+                    simbolo = "N"; // navio visível
                 }
-
-                System.out.printf("%-3c", simbolo);
+                System.out.printf("%-3s", simbolo);
             }
             System.out.println();
         }
     }
 
-    // Função para verificar se todos os navios de um jogador foram afundados
+
+    // Função para realizar o ataque
+    public static boolean realizarAtaque(Scanner ler, int[][] tabuleiroOponente, int[][] visaoOponente) {
+        System.out.println("\nDigite as coordenadas do ataque:");
+        System.out.print("Linha (0-9): ");
+        int linha = ler.nextInt();
+        System.out.print("Coluna (A-J): ");
+        char colunaLetra = ler.next().toUpperCase().charAt(0);
+        int coluna = colunaLetra - 'A';
+
+        if (tabuleiroOponente[linha][coluna] == 1) {
+            visaoOponente[linha][coluna] = -1;  // Marca um acerto
+            tabuleiroOponente[linha][coluna] = -1;  // Afunda o navio no tabuleiro do oponente
+            System.out.println("Você acertou!");
+            return true;
+        } else {
+            visaoOponente[linha][coluna] = 0;  // Marca um erro (água)
+            System.out.println("Água! Tente novamente.");
+            return false;
+        }
+    }
+
+    // Função para realizar o ataque do computador
+    public static boolean realizarAtaqueComputador(int[][] tabuleiroJogador, int[][] visaoJogador) {
+        Random aleatorio = new Random();
+        int linha = aleatorio.nextInt(10);
+        int coluna = aleatorio.nextInt(10);
+
+        if (tabuleiroJogador[linha][coluna] == 1) {
+            visaoJogador[linha][coluna] = -1;  // Marca um acerto
+            tabuleiroJogador[linha][coluna] = -1;  // Afunda o navio
+            System.out.println("O computador acertou!");
+            return true;
+        } else {
+            visaoJogador[linha][coluna] = 0;  // Marca erro
+            System.out.println("O computador errou.");
+            return false;
+        }
+    }
+
+    // Função para verificar se todos os navios foram afundados
     public static boolean todosNaviosAfundados(int[][] tabuleiro) {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (tabuleiro[i][j] == 1) {
-                    return false;  // Ainda existe um navio no tabuleiro
+                    return false;  // Se encontrar qualquer navio, o jogo não acabou
                 }
             }
         }
         return true;  // Todos os navios foram afundados
-    }
-
-    // Função para realizar o ataque do computador
-    public static boolean realizarAtaqueComputador(int[][] tabuleiro, int[][] visao) {
-        Random aleatorio = new Random();
-
-        int linha = aleatorio.nextInt(10);
-        int coluna = aleatorio.nextInt(10);
-
-        System.out.println("Computador atirou na posição " + linha + ", " + (char) ('A' + coluna));
-
-        // Se acertar um navio
-        if (tabuleiro[linha][coluna] == 1) {
-            System.out.println("O COMPUTADOR ACERTOU UM NAVIO!");
-            tabuleiro[linha][coluna] = 3;  // Marca o acerto
-            visao[linha][coluna] = 3;      // Atualiza a visão do jogador
-            return true;
-        } else {
-            System.out.println("O COMPUTADOR ATIROU NA ÁGUA!");
-            tabuleiro[linha][coluna] = 2;  // Marca como água
-            visao[linha][coluna] = 2;      // Atualiza a visão do jogador
-            return false;
-        }
     }
 }
