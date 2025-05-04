@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class BatalhaNaval {
-    // Constantes para melhor legibilidade
+    //Constantes
     private static final int AGUA = 0;
     private static final int NAVIO = 1;
     private static final int TIRO_AGUA = 2;
@@ -16,25 +16,24 @@ public class BatalhaNaval {
 
         int[][] tabuleiroJogador1 = new int[10][10];
         int[][] tabuleiroJogador2 = new int[10][10];
-        int[][] visaoJogador1 = new int[10][10]; // O que Jogador1 vê do Jogador2
-        int[][] visaoJogador2 = new int[10][10]; // O que Jogador2 vê do Jogador1
+        int[][] visaoJogador1 = new int[10][10];
+        int[][] visaoJogador2 = new int[10][10];
 
         int[] tamanhosNavios = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
 
-        System.out.println("=== BATALHA NAVAL ===");
+        System.out.println("BATALHA NAVAL");
         mostrarLegenda();
 
-        // Configuração do jogo
         int modo = 0;
         while (modo != 1 && modo != 2) {
             System.out.println("\nEscolha o modo de jogo:");
             System.out.println("1 - Jogador vs Computador");
             System.out.println("2 - Jogador vs Jogador");
             System.out.print("Digite 1 ou 2: ");
-            if (ler.hasNextInt()) {
-                modo = ler.nextInt();
-            }
+
+            modo = ler.nextInt();
             ler.nextLine();
+
             if (modo != 1 && modo != 2) {
                 System.out.println("Opção inválida! Digite 1 ou 2.");
             }
@@ -42,9 +41,18 @@ public class BatalhaNaval {
 
         System.out.print("\nNome do Jogador 1: ");
         String jogador1 = ler.nextLine();
-        String jogador2 = (modo == 1) ? "Computador" : lerNomeJogador2(ler);
+        String jogador2;
+        switch (modo) {
+            case 1:
+                jogador2 = "Computador";
+                break;
+            case 2:
+                jogador2 = lerNomeJogador2(ler);
+                break;
+            default:
+                jogador2 = "";
+        }
 
-        // Posicionamento dos navios
         posicionarNaviosJogador(ler, tabuleiroJogador1, tamanhosNavios, jogador1);
 
         if (modo == 1) {
@@ -54,7 +62,6 @@ public class BatalhaNaval {
             posicionarNaviosJogador(ler, tabuleiroJogador2, tamanhosNavios, jogador2);
         }
 
-        // Jogo principal
         boolean vezJogador1 = true;
         boolean jogoAcabou = false;
 
@@ -71,11 +78,10 @@ public class BatalhaNaval {
                     jogoAcabou = turnoJogador(ler, tabuleiroJogador1, visaoJogador2, jogador2, jogador1);
                 }
                 if (!jogoAcabou) {
-                    vezJogador1 = (modo == 2) ? !verificarAcerto(tabuleiroJogador1, visaoJogador2) : true;
+                    vezJogador1 = true;
                 }
             }
         }
-        ler.close();
     }
 
     private static String lerNomeJogador2(Scanner ler) {
@@ -85,7 +91,7 @@ public class BatalhaNaval {
 
     public static void mostrarLegenda() {
         System.out.println("\nLEGENDA:");
-        System.out.println("~ - Água não explorada");
+        System.out.println("* - Água não explorada");
         System.out.println("O - Tiro na água (errou)");
         System.out.println("X - Tiro no navio (acertou)");
         System.out.println("N - Seu navio (apenas durante posicionamento)");
@@ -129,6 +135,7 @@ public class BatalhaNaval {
                     if (posicionado) {
                         posicionarNavio(tabuleiro, linha, coluna, tamanho, direcao == 'H' ? 1 : 2);
                         System.out.println("Navio posicionado com sucesso!");
+                        imprimirTabuleiro(tabuleiro, true);
                     } else {
                         System.out.println("Posição inválida! Tente novamente.");
                     }
@@ -140,18 +147,15 @@ public class BatalhaNaval {
         }
     }
 
-    public static int lerLinhaValida(Scanner scanner) {
+    public static int lerLinhaValida(Scanner ler) {
         int linha = -1;
         while (linha < 0 || linha > 9) {
             System.out.print("Linha (0-9): ");
-            if (scanner.hasNextInt()) {
-                linha = scanner.nextInt();
-                scanner.nextLine();
+            String entrada = ler.nextLine();
+            if (entrada.length() == 1 && entrada.charAt(0) >= '0' && entrada.charAt(0) <= '9') {
+                linha = entrada.charAt(0) - '0';
             } else {
-                scanner.nextLine();
-            }
-            if (linha < 0 || linha > 9) {
-                System.out.println("Linha inválida! Digite um número entre 0 e 9.");
+                System.out.println("Entrada inválida! Digite um número entre 0 e 9.");
             }
         }
         return linha;
@@ -190,12 +194,12 @@ public class BatalhaNaval {
     public static boolean verificarPosicao(int[][] tabuleiro, int linha, int coluna, int tamanho, int direcao) {
         if (linha < 0 || linha >= 10 || coluna < 0 || coluna >= 10) return false;
 
-        if (direcao == 1) { // Horizontal
+        if (direcao == 1) {
             if (coluna + tamanho > 10) return false;
             for (int c = coluna; c < coluna + tamanho; c++) {
                 if (tabuleiro[linha][c] != AGUA) return false;
             }
-        } else { // Vertical
+        } else {
             if (linha + tamanho > 10) return false;
             for (int l = linha; l < linha + tamanho; l++) {
                 if (tabuleiro[l][coluna] != AGUA) return false;
@@ -205,11 +209,11 @@ public class BatalhaNaval {
     }
 
     public static void posicionarNavio(int[][] tabuleiro, int linha, int coluna, int tamanho, int direcao) {
-        if (direcao == 1) { // Horizontal
+        if (direcao == 1) {
             for (int c = coluna; c < coluna + tamanho; c++) {
                 tabuleiro[linha][c] = NAVIO;
             }
-        } else { // Vertical
+        } else {
             for (int l = linha; l < linha + tamanho; l++) {
                 tabuleiro[l][coluna] = NAVIO;
             }
@@ -233,7 +237,7 @@ public class BatalhaNaval {
                 } else if (tabuleiro[i][j] == NAVIO && mostrarNavios) {
                     System.out.print("N ");
                 } else {
-                    System.out.print("~ ");
+                    System.out.print("* ");
                 }
             }
             System.out.println();
@@ -242,7 +246,7 @@ public class BatalhaNaval {
 
     public static boolean turnoJogador(Scanner ler, int[][] tabuleiroOponente, int[][] visao,
                                        String atacante, String oponente) {
-        System.out.println("\n=== VEZ DE " + atacante + " ===");
+        System.out.println("\nVez de " + atacante);
         System.out.println("Tabuleiro de " + oponente + ":");
         imprimirTabuleiro(visao, false);
 
@@ -263,25 +267,24 @@ public class BatalhaNaval {
         boolean acertou = (tabuleiroOponente[linha][coluna] == NAVIO);
 
         if (acertou) {
-            System.out.println("\nACERTOU! ⚔️");
+            System.out.println("\nACERTOU!");
             visao[linha][coluna] = TIRO_NAVIO;
             tabuleiroOponente[linha][coluna] = TIRO_NAVIO;
         } else {
-            System.out.println("\nÁGUA! 🌊");
+            System.out.println("\nÁGUA!");
             visao[linha][coluna] = TIRO_AGUA;
         }
 
         if (verificarVitoria(tabuleiroOponente)) {
-            System.out.println("\nPARABÉNS " + atacante + "! VOCÊ AFUNDOU TODOS OS NAVIOS DE " + oponente + "! 🏆");
+            System.out.println("\nPARABÉNS " + atacante + "! VOCÊ AFUNDOU TODOS OS NAVIOS DE " + oponente + "!");
             return true;
         }
 
         return false;
     }
 
-    public static boolean turnoComputador(int[][] tabuleiroJogador, int[][] visaoComputador,
-                                          String computador, String jogador) {
-        System.out.println("\n=== VEZ DO " + computador + " ===");
+    public static boolean turnoComputador(int[][] tabuleiroJogador, int[][] visaoComputador, String computador, String jogador) {
+        System.out.println("\nVez do" + computador);
 
         Random aleatorio = new Random();
         int linha, coluna;
@@ -303,7 +306,7 @@ public class BatalhaNaval {
         }
 
         if (verificarVitoria(tabuleiroJogador)) {
-            System.out.println("\nO " + computador + " AFUNDOU TODOS OS SEUS NAVIOS! 💀");
+            System.out.println("\nO " + computador + " AFUNDOU TODOS OS SEUS NAVIOS!");
             return true;
         }
 
