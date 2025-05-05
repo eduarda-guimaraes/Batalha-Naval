@@ -49,10 +49,17 @@ O jogo permite partidas entre **dois jogadores** ou **jogador contra computador*
 
 ### Tela inicial de escolha de modo de jogo
 ```
-Bem-vindo à Batalha Naval!
+BATALHA NAVAL
+LEGENDA:
+* - Água não explorada
+O - Tiro na água (errou)
+X - Tiro no navio (acertou)
+N - Seu navio (apenas durante posicionamento)
+----------------------
+
 Escolha o modo de jogo:
-1 - Jogador vs Jogador
-2 - Jogador vs Computador
+1 - Jogador vs Computador
+2 - Jogador vs Jogador
 ```
 
 ### Exemplo de Mapa Durante o Jogo
@@ -69,10 +76,6 @@ H * * * * * * * * * *
 I * * * * * * * * * *
 J * * * * * * * * * *
 ```
-
-- `X`: Barco atingido  
-- `O`: Água atingida  
-- `*`: Área ainda não atingida e sem informações reveladas
 
 ### Tela de vitória
 ```
